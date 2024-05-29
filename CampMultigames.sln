@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampMultigames.Domain", "CampMultigames.Domain\CampMultigames.Domain.csproj", "{FF748D23-CBC1-4875-82D6-11B4684A061F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampMultigames.Infra", "CampMultigames.Infra\CampMultigames.Infra.csproj", "{32CF800B-FC94-40FC-9C59-7BD212121BDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampMultigames.Application", "CampMultigames.Application\CampMultigames.Application.csproj", "{44B81991-8770-4AD0-A7B6-45F13C569747}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampMultigames.Api", "CampMultigames.Api\CampMultigames.Api.csproj", "{7795BF30-C14F-4062-9D84-93D43250B5B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF748D23-CBC1-4875-82D6-11B4684A061F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF748D23-CBC1-4875-82D6-11B4684A061F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF748D23-CBC1-4875-82D6-11B4684A061F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF748D23-CBC1-4875-82D6-11B4684A061F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32CF800B-FC94-40FC-9C59-7BD212121BDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32CF800B-FC94-40FC-9C59-7BD212121BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32CF800B-FC94-40FC-9C59-7BD212121BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32CF800B-FC94-40FC-9C59-7BD212121BDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B81991-8770-4AD0-A7B6-45F13C569747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B81991-8770-4AD0-A7B6-45F13C569747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B81991-8770-4AD0-A7B6-45F13C569747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B81991-8770-4AD0-A7B6-45F13C569747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7795BF30-C14F-4062-9D84-93D43250B5B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7795BF30-C14F-4062-9D84-93D43250B5B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7795BF30-C14F-4062-9D84-93D43250B5B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7795BF30-C14F-4062-9D84-93D43250B5B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
