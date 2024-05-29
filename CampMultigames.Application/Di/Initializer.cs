@@ -15,6 +15,7 @@ public static class Initializer
         services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("AuthDb"));
 
         // repositories
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         
         // services
