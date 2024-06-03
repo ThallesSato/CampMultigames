@@ -1,4 +1,6 @@
-﻿using CampMultigames.Domain.Interfaces;
+﻿using CampMultigames.Application.Interfaces;
+using CampMultigames.Application.Services;
+using CampMultigames.Domain.Interfaces;
 using CampMultigames.Infra.Context;
 using CampMultigames.Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ public static class Initializer
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         
         // services
-        
+        services.AddScoped(typeof(ITimeService), typeof(TimeService));
+        services.AddScoped(typeof(ITabelaGeralService), typeof(TabelaGeralService));
     }
 }

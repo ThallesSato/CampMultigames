@@ -2,5 +2,5 @@
 
 public class Jogo : BaseEntity
 {
-    
+    public required string Name { get; set; }
 }

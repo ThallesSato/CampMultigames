@@ -20,7 +20,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
         return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<List<TEntity>> GetAllAsync()
     {
         return await _context.Set<TEntity>().ToListAsync();
     }
