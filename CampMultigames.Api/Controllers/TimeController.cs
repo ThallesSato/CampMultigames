@@ -1,5 +1,6 @@
 ﻿using CampMultigames.Application.Dtos.Input;
 using CampMultigames.Application.Interfaces;
+using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
 using Mapster;
 using MapsterMapper;
@@ -12,23 +13,29 @@ namespace CampMultigames.Api.Controllers;
 public class TimeController : ControllerBase
 {
     private readonly ITimeService _timeService;
+    private readonly ITabelaGeralService _tabelaGeralService;
+    private readonly IUnitOfWork _unitOfWork;
     
-    public TimeController(ITimeService timeService)
+    public TimeController(ITimeService timeService, IUnitOfWork unitOfWork, ITabelaGeralService tabelaGeralService)
     {
         _timeService = timeService;
+        _unitOfWork = unitOfWork;
+        _tabelaGeralService = tabelaGeralService;
     }
 
     [HttpGet]
     public async Task<ActionResult> GetAll()
     {
-        return Ok(await _timeService.GetAll());
+        return Ok(await _timeService.GetAllAsync());
     }
     
     [HttpPost]
-    public IActionResult Post(TimeDto timeDto)
+    public async Task<IActionResult> Post(TimeDto timeDto)
     {
         var time = timeDto.Adapt<Time>();
-        _timeService.Post(time);
-        return Ok();
+        var result = await _timeService.PostAsync(time);
+        _tabelaGeralService.CreateAsync(result);
+        await _unitOfWork.SaveChangesAsync();
+        return Ok(result);
     }
 }

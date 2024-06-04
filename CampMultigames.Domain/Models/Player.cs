@@ -1,7 +1,10 @@
-﻿namespace CampMultigames.Domain.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace CampMultigames.Domain.Models;
 
 public class Player : BaseEntity
 {
     public required string Name { get; set; }
-    public required Time Time { get; set; }
+    [JsonIgnore]
+    public Time Time { get; set; }
 }

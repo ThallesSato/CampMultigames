@@ -22,7 +22,8 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
 
     public async Task<List<TEntity>> GetAllAsync()
     {
-        return await _context.Set<TEntity>().ToListAsync();
+        var result = await _context.Set<TEntity>().ToListAsync();
+        return result;
     }
 
     public void Update(TEntity entity)

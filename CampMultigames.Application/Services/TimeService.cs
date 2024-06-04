@@ -6,18 +6,23 @@ namespace CampMultigames.Application.Services;
 
 public class TimeService : ITimeService
 {
-    private readonly IRepository<Time> _timeRepository;
-    public TimeService(IRepository<Time> timeRepository)
+    private readonly ITimeRepository _timeRepository;
+    public TimeService(ITimeRepository timeRepository)
     {
         _timeRepository = timeRepository;
     }
-    public async void Post(Time time)
+    public async Task<Time> PostAsync(Time time)
     {
-        await _timeRepository.CreateAsync(time);
+        return await _timeRepository.CreateAsync(time);
     }
     
-    public async Task<List<Time>> GetAll()
+    public async Task<List<Time>> GetAllAsync()
     {
         return await _timeRepository.GetAllAsync();
+    }
+
+    public Task<Time?> GetByIdAsync(int id)
+    {
+        return _timeRepository.GetByIdOrDefaultAsync(id);
     }
 }

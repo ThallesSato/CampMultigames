@@ -14,4 +14,10 @@ public class TabelaGeralController : ControllerBase
         _tabelaGeralService = tabelaGeralService;
     }
     
+    [HttpGet]
+    public async Task<ActionResult> GetAll()
+    {
+        return Ok(await _tabelaGeralService.GetAllAsync());
+    }
+    
 }
