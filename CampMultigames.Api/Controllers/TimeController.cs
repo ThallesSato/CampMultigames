@@ -26,16 +26,30 @@ public class TimeController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetAll()
     {
+        try
+        {
         return Ok(await _timeService.GetAllAsync());
+    }
+    catch (Exception e)
+    {
+        return BadRequest(e.Message);
+    }
     }
     
     [HttpPost]
     public async Task<IActionResult> Post(TimeDto timeDto)
     {
+        try
+        {
         var time = timeDto.Adapt<Time>();
         var result = await _timeService.PostAsync(time);
         _tabelaGeralService.CreateAsync(result);
         await _unitOfWork.SaveChangesAsync();
         return Ok(result);
+    }
+    catch (Exception e)
+    {
+        return BadRequest(e.Message);
+    }
     }
 }

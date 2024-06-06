@@ -27,6 +27,7 @@ public static class Initializer
         services.AddScoped(typeof(ITimeService), typeof(TimeService));
         services.AddScoped(typeof(ITabelaGeralService), typeof(TabelaGeralService));
         services.AddScoped(typeof(IPlayerService), typeof(PlayerService));
+        services.AddScoped(typeof(IConfrontoService), typeof(ConfrontoService));
         services.AddScoped(typeof(IJogoService), typeof(JogoService));
         
     }

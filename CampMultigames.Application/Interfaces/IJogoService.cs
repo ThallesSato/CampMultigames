@@ -4,5 +4,5 @@ namespace CampMultigames.Application.Interfaces;
 
 public interface IJogoService
 {
-    Task<Jogo> PostAsync(Jogo jogo);
+    Task<JogoBase> PostAsync(JogoBase jogoBase);
 }

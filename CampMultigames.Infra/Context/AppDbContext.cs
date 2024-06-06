@@ -12,6 +12,6 @@ public class AppDbContext : DbContext
     public DbSet<Time> Times => Set<Time>();
     public DbSet<Confronto> Confrontos => Set<Confronto>();
     public DbSet<Player> Players => Set<Player>();
-    public DbSet<Jogo> Jogos => Set<Jogo>();
+    public DbSet<JogoBase> Jogos => Set<JogoBase>();
     public DbSet<TabelaGeral> TabelasGerais => Set<TabelaGeral>();
 }

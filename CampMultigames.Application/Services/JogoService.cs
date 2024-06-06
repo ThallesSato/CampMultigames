@@ -6,14 +6,14 @@ namespace CampMultigames.Application.Services;
 
 public class JogoService : IJogoService
 {
-    private readonly IRepository<Jogo> _repository;
+    private readonly IRepository<JogoBase> _repository;
 
-    public JogoService(IRepository<Jogo> repository)
+    public JogoService(IRepository<JogoBase> repository)
     {
         _repository = repository;
     }
-    public async Task<Jogo> PostAsync(Jogo jogo)
+    public async Task<JogoBase> PostAsync(JogoBase jogoBase)
     {
-        return await _repository.CreateAsync(jogo);
+        return await _repository.CreateAsync(jogoBase);
     }
 }

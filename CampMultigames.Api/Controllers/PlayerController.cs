@@ -25,6 +25,8 @@ public class PlayerController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(PlayerDto playerDto)
     {
+        try
+        {
         var time = await _timeService.GetByIdAsync(playerDto.TimeId);
         if (time == null) return NotFound("Time not found");
         var player = playerDto.Adapt<Player>();
@@ -32,5 +34,10 @@ public class PlayerController : ControllerBase
         var response = await _playerService.PostAsync(player);
         await _unitOfWork.SaveChangesAsync();
         return Ok(response);
+    }
+    catch (Exception e)
+    {
+        return BadRequest(e.Message);
+    }
     }
 }

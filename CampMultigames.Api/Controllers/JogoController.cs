@@ -15,8 +15,16 @@ public class JogoController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Post(Jogo jogo)
+    public async Task<IActionResult> Post(JogoBase jogoBase)
     {
-        return Ok(await _jogoService.PostAsync(jogo));
+        try
+        {
+            var result = await _jogoService.PostAsync(jogoBase);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

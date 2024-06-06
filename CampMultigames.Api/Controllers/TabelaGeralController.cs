@@ -17,7 +17,14 @@ public class TabelaGeralController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetAll()
     {
+        try
+        {
         return Ok(await _tabelaGeralService.GetAllAsync());
+    }
+    catch (Exception e)
+    {
+        return BadRequest(e.Message);
+    }
     }
     
 }
