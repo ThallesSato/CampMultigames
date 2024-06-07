@@ -3,6 +3,7 @@ using CampMultigames.Application.Interfaces;
 using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -23,6 +24,7 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Post(PlayerDto playerDto)
     {
         try

@@ -1,6 +1,7 @@
 ﻿using CampMultigames.Application.Interfaces;
 using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -31,6 +32,7 @@ public class JogoController : ControllerBase
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Post(JogoBase jogoBase)
     {
         try

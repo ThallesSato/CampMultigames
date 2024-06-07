@@ -4,6 +4,7 @@ using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -37,6 +38,7 @@ public class TimeController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Post(TimeDto timeDto)
     {
         try

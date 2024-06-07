@@ -2,6 +2,7 @@
 using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -37,6 +38,7 @@ public class ConfrontoController : ControllerBase
     }
     
     [HttpPost("GenerateConfrontos")]
+    [Authorize]
     public async Task<IActionResult> GenerateConfrontos()
     {
         try
@@ -53,19 +55,20 @@ public class ConfrontoController : ControllerBase
         }
     }
     
-    [HttpPut("{confrontoId}")]
-    public async Task<IActionResult> UpdateConfronto(int confrontoId, Confronto confronto)
-    {
-        try
-        {
-            confronto.Id = confrontoId;
-            await _unitOfWork.SaveChangesAsync();
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
+    // [HttpPut("{confrontoId}")]
+    // [Authorize]
+    // public async Task<IActionResult> UpdateConfronto(int confrontoId, Confronto confronto)
+    // {
+    //     try
+    //     {
+    //         confronto.Id = confrontoId;
+    //         await _unitOfWork.SaveChangesAsync();
+    //         return Ok();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e.Message);
+    //     }
+    // }
     
 }
