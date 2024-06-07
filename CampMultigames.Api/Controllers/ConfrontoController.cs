@@ -1,4 +1,7 @@
 ﻿using CampMultigames.Application.Interfaces;
+using CampMultigames.Domain.Interfaces;
+using CampMultigames.Domain.Models;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -8,10 +11,16 @@ namespace CampMultigames.Api.Controllers;
 public class ConfrontoController : ControllerBase
 {
     private readonly IConfrontoService _confrontoService;
+    private readonly ITimeService _timeService;
+    private readonly IJogoService _jogoService;
+    private readonly IUnitOfWork _unitOfWork;
     
-    public ConfrontoController(IConfrontoService confrontoService)
+    public ConfrontoController(IConfrontoService confrontoService, ITimeService timeService, IJogoService jogoService, IUnitOfWork unitOfWork)
     {
         _confrontoService = confrontoService;
+        _timeService = timeService;
+        _jogoService = jogoService;
+        _unitOfWork = unitOfWork;
     }
     
     [HttpGet]
@@ -26,4 +35,37 @@ public class ConfrontoController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpPost("GenerateConfrontos")]
+    public async Task<IActionResult> GenerateConfrontos()
+    {
+        try
+        {
+            var times = await _timeService.GetAllAsync();
+            var jogos = await _jogoService.GetAllTabelaAsync();
+            await _confrontoService.CreateAllAsync(times, jogos);
+            await _unitOfWork.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPut("{confrontoId}")]
+    public async Task<IActionResult> UpdateConfronto(int confrontoId, Confronto confronto)
+    {
+        try
+        {
+            confronto.Id = confrontoId;
+            await _unitOfWork.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
 }

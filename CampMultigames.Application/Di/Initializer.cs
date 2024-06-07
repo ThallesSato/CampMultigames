@@ -21,6 +21,8 @@ public static class Initializer
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         services.AddScoped(typeof(ITimeRepository), typeof(TimeRepository));
         services.AddScoped(typeof(ITabelaGeralRepository), typeof(TabelaGeralRepository));
+        services.AddScoped(typeof(IJogosRepository), typeof(JogosRepository));
+        services.AddScoped(typeof(IConfrontoRepository), typeof(ConfrontoRepository));
         
         
         // services

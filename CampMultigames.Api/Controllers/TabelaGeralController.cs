@@ -8,23 +8,22 @@ namespace CampMultigames.Api.Controllers;
 public class TabelaGeralController : ControllerBase
 {
     private readonly ITabelaGeralService _tabelaGeralService;
-    
+
     public TabelaGeralController(ITabelaGeralService tabelaGeralService)
     {
         _tabelaGeralService = tabelaGeralService;
     }
-    
+
     [HttpGet]
     public async Task<ActionResult> GetAll()
     {
         try
         {
-        return Ok(await _tabelaGeralService.GetAllAsync());
+            return Ok(await _tabelaGeralService.GetAllAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
-    catch (Exception e)
-    {
-        return BadRequest(e.Message);
-    }
-    }
-    
 }

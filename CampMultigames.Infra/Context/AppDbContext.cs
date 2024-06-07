@@ -14,4 +14,14 @@ public class AppDbContext : DbContext
     public DbSet<Player> Players => Set<Player>();
     public DbSet<JogoBase> Jogos => Set<JogoBase>();
     public DbSet<TabelaGeral> TabelasGerais => Set<TabelaGeral>();
+    public DbSet<JogoTabela> JogosTabela => Set<JogoTabela>();
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Confronto>(e =>
+        {
+            e.HasIndex(c => new { c.TimeCasaId, c.TimeForaId, c.JogoBaseId })
+                .IsUnique();
+        });
+    }
 }

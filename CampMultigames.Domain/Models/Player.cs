@@ -6,5 +6,5 @@ public class Player : BaseEntity
 {
     public required string Name { get; set; }
     [JsonIgnore]
-    public Time Time { get; set; }
+    public Time? Time { get; set; }
 }
