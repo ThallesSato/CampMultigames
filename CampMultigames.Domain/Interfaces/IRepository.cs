@@ -1,4 +1,6 @@
-﻿namespace CampMultigames.Domain.Interfaces;
+﻿using CampMultigames.Domain.Models;
+
+namespace CampMultigames.Domain.Interfaces;
 
 public interface IRepository <TEntity> where TEntity : class
 {

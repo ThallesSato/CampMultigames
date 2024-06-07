@@ -15,12 +15,13 @@ public class AppDbContext : DbContext
     public DbSet<JogoBase> Jogos => Set<JogoBase>();
     public DbSet<TabelaGeral> TabelasGerais => Set<TabelaGeral>();
     public DbSet<JogoTabela> JogosTabela => Set<JogoTabela>();
+    public DbSet<TabelaPorJogoTabela> TabelasPorJogoTabela => Set<TabelaPorJogoTabela>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Confronto>(e =>
         {
-            e.HasIndex(c => new { c.TimeCasaId, c.TimeForaId, c.JogoBaseId })
+            e.HasIndex(c => new { c.TimeCasaId, c.TimeForaId, c.JogoTabelaId })
                 .IsUnique();
         });
     }

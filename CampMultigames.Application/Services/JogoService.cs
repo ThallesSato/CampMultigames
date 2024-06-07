@@ -18,6 +18,13 @@ public class JogoService : IJogoService
         return await _repository.GetAllAsync();
     }
 
+    public async Task<JogoTabela?> GetTabelaById(int id)
+    {
+        var tabelas = await _repository.GetAllTabelaAsync();
+        var result = tabelas.FirstOrDefault(t => t.Id == id);
+        return result;
+    }
+
     public async Task<List<JogoTabela>> GetAllTabelaAsync()
     {
         return await _repository.GetAllTabelaAsync();

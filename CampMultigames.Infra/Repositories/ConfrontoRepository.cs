@@ -19,7 +19,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
         return _context.Confrontos
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
-            .Include(c => c.JogoBase)
+            .Include(c => c.JogoTabela)
             .ToListAsync();
     }
 }

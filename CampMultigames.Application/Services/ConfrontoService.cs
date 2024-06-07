@@ -12,6 +12,11 @@ public class ConfrontoService : IConfrontoService
         _repository = repository;
     }
 
+    public Task<Confronto?> GetByIdAsync(int confrontoId)
+    {
+        return _repository.GetByIdOrDefaultAsync(confrontoId);
+    }
+
     public async Task<List<Confronto>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
@@ -27,19 +32,24 @@ public class ConfrontoService : IConfrontoService
                 foreach (var time2 in times)
                 {
                     if (time1 == time2) continue;
-                    var confrontoExistente = confrontos.Find(c => c.TimeCasa == time1 && c.TimeFora == time2 && c.JogoBase == jogo);
+                    var confrontoExistente = confrontos.Find(c => c.TimeCasa == time1 && c.TimeFora == time2 && c.JogoTabela == jogo);
                     if (confrontoExistente != null) continue;
                     
                     var confronto = new Confronto
                     {
                         TimeCasa = time1,
                         TimeFora = time2,
-                        JogoBase = jogo
+                        JogoTabela = jogo
                     };
                     
                     await _repository.CreateAsync(confronto);
                 }
             }
         }
+    }
+
+    public void Update(Confronto confronto)
+    {
+        _repository.Update(confronto);
     }
 }

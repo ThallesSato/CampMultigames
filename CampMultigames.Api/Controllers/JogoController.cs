@@ -32,7 +32,7 @@ public class JogoController : ControllerBase
     }
     
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> Post(JogoBase jogoBase)
     {
         try

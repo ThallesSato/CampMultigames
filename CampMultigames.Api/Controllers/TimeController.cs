@@ -38,14 +38,13 @@ public class TimeController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> Post(TimeDto timeDto)
     {
         try
         {
             var time = timeDto.Adapt<Time>();
             var result = await _timeService.PostAsync(time);
-            _tabelaGeralService.CreateAsync(result);
             await _unitOfWork.SaveChangesAsync();
             return Ok(result);
         }

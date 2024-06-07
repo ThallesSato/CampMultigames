@@ -24,7 +24,7 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> Post(PlayerDto playerDto)
     {
         try

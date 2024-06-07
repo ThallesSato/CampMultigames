@@ -13,16 +13,46 @@ public class TabelaGeralService : ITabelaGeralService
         _repository = repository;
     }
 
-    public void CreateAsync(Time time)
+    public async Task CreateAllAsync(List<Time> times)
     {
-        _repository.CreateAsync(new TabelaGeral
+        var timeslist = await _repository.GetAllAsync();
+        foreach (var time in times)
         {
-            Time = time
-        });
+            if (timeslist.Any(t => t.Time.Id == time.Id))
+                continue;
+            await _repository.CreateAsync(new TabelaGeral
+            {
+                Id = time.Id,
+                Time = time
+            });
+        }
     }
 
     public Task<List<TabelaGeral>> GetAllAsync()
     {
         return _repository.GetAllAsync();
+    }
+
+    public async Task UpdateWinner(Time time, int pontos)
+    {
+        var tabelaGeral = await _repository.GetByIdOrDefaultAsync(time.Id);
+        if (tabelaGeral == null)
+            return;
+
+        tabelaGeral.vitorias++;
+        tabelaGeral.pontos += pontos;
+        tabelaGeral.jogos++;
+        _repository.Update(tabelaGeral);
+    }
+
+    public async Task UpdateLooser(Time time)
+    {
+        var tabelaGeral = await _repository.GetByIdOrDefaultAsync(time.Id);
+        if (tabelaGeral == null)
+            return;
+
+        tabelaGeral.derrotas++;
+        tabelaGeral.jogos++;
+        _repository.Update(tabelaGeral);
     }
 }
