@@ -63,7 +63,7 @@ public class ConfrontoController : ControllerBase
     }
     
     [HttpPut("{confrontoId}")]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> UpdateConfronto(int confrontoId, ConfrontoDto confrontoDto)
     {
         try
@@ -81,11 +81,15 @@ public class ConfrontoController : ControllerBase
             {
                 await _tabelaGeralService.UpdateWinner(confronto.TimeCasa, confronto.JogoTabela.pontosPorGame);
                 await _tabelaGeralService.UpdateLooser(confronto.TimeFora);
+                await _tabelaPorJogoTabelaService.UpdateWinner(confronto.TimeCasa,confronto.JogoTabela.pontosPorGame, confronto.JogoTabela);
+                await _tabelaPorJogoTabelaService.UpdateLooser(confronto.TimeFora, confronto.JogoTabela);
             }
             else
             {
                 await _tabelaGeralService.UpdateWinner(confronto.TimeFora, confronto.JogoTabela.pontosPorGame);
                 await _tabelaGeralService.UpdateLooser(confronto.TimeCasa);
+                await _tabelaPorJogoTabelaService.UpdateWinner(confronto.TimeFora,confronto.JogoTabela.pontosPorGame, confronto.JogoTabela);
+                await _tabelaPorJogoTabelaService.UpdateLooser(confronto.TimeCasa, confronto.JogoTabela);
             }
             
             await _unitOfWork.SaveChangesAsync();

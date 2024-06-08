@@ -22,4 +22,13 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.JogoTabela)
             .ToListAsync();
     }
+
+    public new Task<Confronto?> GetByIdOrDefaultAsync(int id)
+    {
+        return _context.Confrontos
+            .Include(c => c.TimeCasa)
+            .Include(c => c.TimeFora)
+            .Include(c => c.JogoTabela)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
 }
