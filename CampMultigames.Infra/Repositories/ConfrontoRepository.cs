@@ -7,6 +7,16 @@ namespace CampMultigames.Infra.Repositories;
 
 public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
 {
+    public new Task<Confronto?> GetByIdOrDefaultAsync(int id)
+    {
+        return _context.Confrontos
+            .Include(c => c.TimeCasa)
+            .Include(c => c.TimeFora)
+            .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
     private readonly AppDbContext _context;
 
     public ConfrontoRepository(AppDbContext context) : base(context)
@@ -20,6 +30,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
             .ToListAsync();
     }
 
@@ -30,6 +41,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
             .ToListAsync();
     }
 
@@ -40,6 +52,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
             .OrderByDescending(c => c.Data)
             .ToListAsync();
     }
@@ -51,6 +64,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
             .OrderByDescending(c => c.Data)
             .ToListAsync();
     }
@@ -62,6 +76,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
+            .Include(c=> c.Mapas)
             .ToListAsync();
     }
 }

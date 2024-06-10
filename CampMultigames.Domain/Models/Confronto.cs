@@ -14,6 +14,7 @@ public class Confronto : BaseEntity
     public virtual Time TimeCasa { get; set; }
     public virtual Time TimeFora { get; set; }
     public virtual JogoTabela JogoTabela { get; set; }
+    public virtual List<Mapa> Mapas { get; set; } = new();
     
     public int PontosCasa { get; set; }
     public int PontosFora { get; set; }

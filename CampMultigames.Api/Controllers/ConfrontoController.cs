@@ -78,11 +78,23 @@ public class ConfrontoController : ControllerBase
             var confronto = await _confrontoService.GetByIdAsync(confrontoId);
             if (confronto == null) 
                 return NotFound("Confronto not found");
+
+            // Cria os mapas
+            var mapasDto = new List<MapaDto?>{ confrontoDto.Mapa1, confrontoDto.Mapa2, confrontoDto.Mapa3 };
             
             // Atribui os dados
             confronto.PontosCasa = confrontoDto.PontosCasa;
             confronto.PontosFora = confrontoDto.PontosFora;
             confronto.Data = confrontoDto.Data;
+            confronto.Mapas = mapasDto
+                .Where(m => m != null)
+                .Select(m =>
+                {
+                    var result = m.Adapt<Mapa>();
+                    result.Confronto = confronto;
+                    return result;
+                })
+                .ToList();
             
             // Atualiza o confront
             _confrontoService.Update(confronto);

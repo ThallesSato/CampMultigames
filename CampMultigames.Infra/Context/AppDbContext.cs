@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<TabelaGeral> TabelasGerais => Set<TabelaGeral>();
     public DbSet<JogoTabela> JogosTabela => Set<JogoTabela>();
     public DbSet<TabelaPorJogoTabela> TabelasPorJogoTabela => Set<TabelaPorJogoTabela>();
+    public DbSet<Mapa> Mapas => Set<Mapa>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

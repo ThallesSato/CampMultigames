@@ -76,6 +76,32 @@ namespace CampMultigames.Infra.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("CampMultigames.Domain.Models.Mapa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ConfrontoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NomeMapa")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PontosCasa")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PontosFora")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfrontoId");
+
+                    b.ToTable("Mapas");
+                });
+
             modelBuilder.Entity("CampMultigames.Domain.Models.Player", b =>
                 {
                     b.Property<int>("Id")
@@ -213,6 +239,17 @@ namespace CampMultigames.Infra.Migrations
                     b.Navigation("TimeFora");
                 });
 
+            modelBuilder.Entity("CampMultigames.Domain.Models.Mapa", b =>
+                {
+                    b.HasOne("CampMultigames.Domain.Models.Confronto", "Confronto")
+                        .WithMany("Mapas")
+                        .HasForeignKey("ConfrontoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Confronto");
+                });
+
             modelBuilder.Entity("CampMultigames.Domain.Models.Player", b =>
                 {
                     b.HasOne("CampMultigames.Domain.Models.Time", "Time")
@@ -250,6 +287,11 @@ namespace CampMultigames.Infra.Migrations
                     b.Navigation("JogoTabela");
 
                     b.Navigation("Time");
+                });
+
+            modelBuilder.Entity("CampMultigames.Domain.Models.Confronto", b =>
+                {
+                    b.Navigation("Mapas");
                 });
 
             modelBuilder.Entity("CampMultigames.Domain.Models.Time", b =>

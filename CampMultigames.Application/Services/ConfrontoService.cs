@@ -51,6 +51,11 @@ public class ConfrontoService : BaseService<Confronto>, IConfrontoService
         _repository.Update(confronto);
     }
 
+    public new Task<Confronto?> GetByIdAsync(int id)
+    {
+        return _repository.GetByIdOrDefaultAsync(id);
+    }
+
     public async Task<List<Confronto>> GetFuturosAsync()
     {
         return await _repository.GetFuturosAsync();

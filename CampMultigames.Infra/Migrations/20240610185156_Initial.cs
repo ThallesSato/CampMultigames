@@ -18,7 +18,7 @@ namespace CampMultigames.Infra.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
                     pontosPorGame = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -82,7 +82,8 @@ namespace CampMultigames.Infra.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    TimeId = table.Column<int>(type: "INTEGER", nullable: true)
+                    TimeId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Foto = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,10 +102,10 @@ namespace CampMultigames.Infra.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TimeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    pontos = table.Column<int>(type: "INTEGER", nullable: false),
-                    jogos = table.Column<int>(type: "INTEGER", nullable: false),
-                    vitorias = table.Column<int>(type: "INTEGER", nullable: false),
-                    derrotas = table.Column<int>(type: "INTEGER", nullable: false)
+                    Pontos = table.Column<int>(type: "INTEGER", nullable: false),
+                    Jogos = table.Column<int>(type: "INTEGER", nullable: false),
+                    Vitorias = table.Column<int>(type: "INTEGER", nullable: false),
+                    Derrotas = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,10 +126,10 @@ namespace CampMultigames.Infra.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     TimeId = table.Column<int>(type: "INTEGER", nullable: false),
                     JogoTabelaId = table.Column<int>(type: "INTEGER", nullable: false),
-                    pontos = table.Column<int>(type: "INTEGER", nullable: false),
-                    jogos = table.Column<int>(type: "INTEGER", nullable: false),
-                    vitorias = table.Column<int>(type: "INTEGER", nullable: false),
-                    derrotas = table.Column<int>(type: "INTEGER", nullable: false)
+                    Pontos = table.Column<int>(type: "INTEGER", nullable: false),
+                    Jogos = table.Column<int>(type: "INTEGER", nullable: false),
+                    Vitorias = table.Column<int>(type: "INTEGER", nullable: false),
+                    Derrotas = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,6 +144,28 @@ namespace CampMultigames.Infra.Migrations
                         name: "FK_TabelasPorJogoTabela_Times_TimeId",
                         column: x => x.TimeId,
                         principalTable: "Times",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mapas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ConfrontoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PontosCasa = table.Column<int>(type: "INTEGER", nullable: false),
+                    PontosFora = table.Column<int>(type: "INTEGER", nullable: false),
+                    NomeMapa = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mapas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mapas_Confrontos_ConfrontoId",
+                        column: x => x.ConfrontoId,
+                        principalTable: "Confrontos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -162,6 +185,11 @@ namespace CampMultigames.Infra.Migrations
                 name: "IX_Confrontos_TimeForaId",
                 table: "Confrontos",
                 column: "TimeForaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mapas_ConfrontoId",
+                table: "Mapas",
+                column: "ConfrontoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Players_TimeId",
@@ -188,7 +216,7 @@ namespace CampMultigames.Infra.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Confrontos");
+                name: "Mapas");
 
             migrationBuilder.DropTable(
                 name: "Players");
@@ -198,6 +226,9 @@ namespace CampMultigames.Infra.Migrations
 
             migrationBuilder.DropTable(
                 name: "TabelasPorJogoTabela");
+
+            migrationBuilder.DropTable(
+                name: "Confrontos");
 
             migrationBuilder.DropTable(
                 name: "Jogos");

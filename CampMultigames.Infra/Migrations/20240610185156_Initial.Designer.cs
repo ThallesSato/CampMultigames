@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampMultigames.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240608055855_Initial")]
+    [Migration("20240610185156_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
 
             modelBuilder.Entity("CampMultigames.Domain.Models.Confronto", b =>
                 {
@@ -64,7 +64,6 @@ namespace CampMultigames.Infra.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -80,11 +79,41 @@ namespace CampMultigames.Infra.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("CampMultigames.Domain.Models.Mapa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ConfrontoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NomeMapa")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PontosCasa")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PontosFora")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfrontoId");
+
+                    b.ToTable("Mapas");
+                });
+
             modelBuilder.Entity("CampMultigames.Domain.Models.Player", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -106,19 +135,19 @@ namespace CampMultigames.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Derrotas")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Jogos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Pontos")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("TimeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("derrotas")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("jogos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("pontos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("vitorias")
+                    b.Property<int>("Vitorias")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -134,22 +163,22 @@ namespace CampMultigames.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Derrotas")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("JogoTabelaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Jogos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Pontos")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TimeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("derrotas")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("jogos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("pontos")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("vitorias")
+                    b.Property<int>("Vitorias")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -213,6 +242,17 @@ namespace CampMultigames.Infra.Migrations
                     b.Navigation("TimeFora");
                 });
 
+            modelBuilder.Entity("CampMultigames.Domain.Models.Mapa", b =>
+                {
+                    b.HasOne("CampMultigames.Domain.Models.Confronto", "Confronto")
+                        .WithMany("Mapas")
+                        .HasForeignKey("ConfrontoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Confronto");
+                });
+
             modelBuilder.Entity("CampMultigames.Domain.Models.Player", b =>
                 {
                     b.HasOne("CampMultigames.Domain.Models.Time", "Time")
@@ -250,6 +290,11 @@ namespace CampMultigames.Infra.Migrations
                     b.Navigation("JogoTabela");
 
                     b.Navigation("Time");
+                });
+
+            modelBuilder.Entity("CampMultigames.Domain.Models.Confronto", b =>
+                {
+                    b.Navigation("Mapas");
                 });
 
             modelBuilder.Entity("CampMultigames.Domain.Models.Time", b =>
