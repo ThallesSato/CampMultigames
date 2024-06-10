@@ -4,25 +4,16 @@ using CampMultigames.Domain.Models;
 
 namespace CampMultigames.Application.Services;
 
-public class TimeService : ITimeService
+public class TimeService : BaseService<Time>, ITimeService
 {
-    private readonly ITimeRepository _timeRepository;
-    public TimeService(ITimeRepository timeRepository)
+    private readonly ITimeRepository _repository;
+    public TimeService(ITimeRepository repository) : base(repository)
     {
-        _timeRepository = timeRepository;
-    }
-    public async Task<Time> PostAsync(Time time)
-    {
-        return await _timeRepository.CreateAsync(time);
-    }
-    
-    public async Task<List<Time>> GetAllAsync()
-    {
-        return await _timeRepository.GetAllAsync();
+        _repository = repository;
     }
 
-    public Task<Time?> GetByIdAsync(int id)
+    public new Task<List<Time>> GetAllAsync()
     {
-        return _timeRepository.GetByIdOrDefaultAsync(id);
+        return _repository.GetAllAsync();
     }
 }

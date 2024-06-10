@@ -2,10 +2,12 @@
 
 namespace CampMultigames.Application.Interfaces;
 
-public interface IConfrontoService
+public interface IConfrontoService : IBaseService<Confronto>
 {
-    Task<Confronto?> GetByIdAsync(int confrontoId);
-    Task<List<Confronto>> GetAllAsync();
     Task CreateAllAsync(List<Time> times, List<JogoTabela> jogos);
     void Update(Confronto confronto);
+    Task<List<Confronto>> GetFuturosAsync();
+    Task<List<Confronto>> GetPassadosAsync();
+    Task<List<Confronto>> GetPassadosByTimeAsync(int timeId);
+    Task<List<Confronto>> GetFuturosByTimeAsync(int timeId);
 }

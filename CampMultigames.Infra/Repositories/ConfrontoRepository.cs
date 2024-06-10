@@ -23,12 +23,45 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .ToListAsync();
     }
 
-    public new Task<Confronto?> GetByIdOrDefaultAsync(int id)
+    public Task<List<Confronto>> GetFuturosAsync()
     {
         return _context.Confrontos
+            .Where(c => c.Data == null)
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .ToListAsync();
+    }
+
+    public Task<List<Confronto>> GetPassadosAsync()
+    {
+        return _context.Confrontos
+            .Where(c => c.Data < DateTime.Now)
+            .Include(c => c.TimeCasa)
+            .Include(c => c.TimeFora)
+            .Include(c => c.JogoTabela)
+            .OrderByDescending(c => c.Data)
+            .ToListAsync();
+    }
+
+    public Task<List<Confronto>> GetPassadosByTimeAsync(int timeId)
+    {
+        return _context.Confrontos
+            .Where(c => c.Data < DateTime.Now && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
+            .Include(c => c.TimeCasa)
+            .Include(c => c.TimeFora)
+            .Include(c => c.JogoTabela)
+            .OrderByDescending(c => c.Data)
+            .ToListAsync();
+    }
+
+    public Task<List<Confronto>> GetFuturosByTimeAsync(int timeId)
+    {
+        return _context.Confrontos
+            .Where(c => c.Data == null && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
+            .Include(c => c.TimeCasa)
+            .Include(c => c.TimeFora)
+            .Include(c => c.JogoTabela)
+            .ToListAsync();
     }
 }

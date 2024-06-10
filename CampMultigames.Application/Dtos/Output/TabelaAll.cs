@@ -1,8 +1,8 @@
-﻿namespace CampMultigames.Domain.Models;
+﻿namespace CampMultigames.Application.Dtos.Output;
 
-public class TabelaGeral : BaseEntity
+public class TabelaAll
 {
-    public required Time Time { get; set; }
+    public string Time { get; set; }
     public int Pontos { get; set; }
     public int Jogos { get; set; }
     public int Vitorias { get; set; }

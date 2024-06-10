@@ -37,7 +37,10 @@ public class JogoController : ControllerBase
     {
         try
         {
+            // Cria o jogo
             var result = await _jogoService.PostAsync(jogoBase);
+
+            // Salva e retorna
             await _unitOfWork.SaveChangesAsync();
             return Ok(result);
         }

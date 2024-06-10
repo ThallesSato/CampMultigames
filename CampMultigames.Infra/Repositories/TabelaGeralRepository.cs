@@ -15,6 +15,9 @@ public class TabelaGeralRepository : Repository<TabelaGeral> , ITabelaGeralRepos
 
     public new Task<List<TabelaGeral>> GetAllAsync()
     {
-        return _context.TabelasGerais.Include(x => x.Time).ToListAsync();
+        return _context.TabelasGerais
+            .Include(x => x.Time)
+            .OrderByDescending(t => t.Pontos)
+            .ToListAsync();
     }
 }

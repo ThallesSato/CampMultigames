@@ -2,9 +2,7 @@
 
 namespace CampMultigames.Application.Interfaces;
 
-public interface ITimeService
+public interface ITimeService : IBaseService<Time>
 {
-    Task<Time> PostAsync(Time time);
-    Task<List<Time>> GetAllAsync();
-    Task<Time?> GetByIdAsync(int id);
+    new Task<List<Time>> GetAllAsync();
 }

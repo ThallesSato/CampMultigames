@@ -4,18 +4,13 @@ using CampMultigames.Domain.Models;
 
 namespace CampMultigames.Application.Services;
 
-public class JogoService : IJogoService
+public class JogoService : BaseService<JogoBase>, IJogoService
 {
     private readonly IJogosRepository _repository;
 
-    public JogoService(IJogosRepository repository)
+    public JogoService(IJogosRepository repository) : base(repository)
     {
         _repository = repository;
-    }
-
-    public async Task<List<JogoBase>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
     }
 
     public async Task<JogoTabela?> GetTabelaById(int id)
@@ -30,7 +25,7 @@ public class JogoService : IJogoService
         return await _repository.GetAllTabelaAsync();
     }
 
-    public async Task<JogoBase> PostAsync(JogoBase jogoBase)
+    public new async Task<JogoBase> PostAsync(JogoBase jogoBase)
     {
         var tab = new JogoTabela()
         {

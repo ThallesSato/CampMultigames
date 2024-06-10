@@ -28,12 +28,12 @@ public static class Initializer
         
         
         // services
-        services.AddScoped(typeof(ITimeService), typeof(TimeService));
         services.AddScoped(typeof(ITabelaGeralService), typeof(TabelaGeralService));
         services.AddScoped(typeof(ITabelaPorJogoTabelaService), typeof(TabelaPorJogoTabelaService));
-        services.AddScoped(typeof(IPlayerService), typeof(PlayerService));
+        services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
         services.AddScoped(typeof(IConfrontoService), typeof(ConfrontoService));
         services.AddScoped(typeof(IJogoService), typeof(JogoService));
+        services.AddScoped(typeof(ITimeService), typeof(TimeService));
         
     }
 }

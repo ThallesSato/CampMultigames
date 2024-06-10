@@ -50,9 +50,15 @@ public class ConfrontoController : ControllerBase
         {
             var times = await _timeService.GetAllAsync();
             var jogos = await _jogoService.GetAllTabelaAsync();
+            
+            // Cria todos os confrontos
             await _confrontoService.CreateAllAsync(times, jogos);
+            
+            // Cria os times nas tabelas
             await _tabelaGeralService.CreateAllAsync(times);
             await _tabelaPorJogoTabelaService.CreateAllAsync(times, jogos);
+            
+            // Salva e retorna
             await _unitOfWork.SaveChangesAsync();
             return Ok();
         }
@@ -68,15 +74,20 @@ public class ConfrontoController : ControllerBase
     {
         try
         {
+            // Verifica se o confronto existe
             var confronto = await _confrontoService.GetByIdAsync(confrontoId);
             if (confronto == null) 
                 return NotFound("Confronto not found");
             
+            // Atribui os dados
             confronto.PontosCasa = confrontoDto.PontosCasa;
             confronto.PontosFora = confrontoDto.PontosFora;
             confronto.Data = confrontoDto.Data;
+            
+            // Atualiza o confront
             _confrontoService.Update(confronto);
 
+            // Atualiza as tabelas conforme o vencedor do confronto
             if (confronto.PontosCasa > confronto.PontosFora)
             {
                 await _tabelaGeralService.UpdateWinner(confronto.TimeCasa, confronto.JogoTabela.pontosPorGame);
@@ -92,6 +103,7 @@ public class ConfrontoController : ControllerBase
                 await _tabelaPorJogoTabelaService.UpdateLooser(confronto.TimeCasa, confronto.JogoTabela);
             }
             
+            // Salva e retorna
             await _unitOfWork.SaveChangesAsync();
             return Ok();
         }
@@ -101,4 +113,59 @@ public class ConfrontoController : ControllerBase
         }
     }
     
+    [HttpGet]
+    [Route("/futuros")]
+    public async Task<ActionResult> GetFuturos()
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetFuturosAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("/passados")]
+    public async Task<ActionResult> GetPassados()
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetPassadosAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    [HttpGet]
+    [Route("time/passados/{timeId}")]
+    public async Task<ActionResult> GetPassadosByTime(int timeId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetPassadosByTimeAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("time/futuros/{timeId}")]
+    public async Task<ActionResult> GetFuturosByTime(int timeId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetFuturosByTimeAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
 }

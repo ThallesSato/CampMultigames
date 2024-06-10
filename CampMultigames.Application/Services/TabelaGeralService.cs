@@ -4,11 +4,11 @@ using CampMultigames.Domain.Models;
 
 namespace CampMultigames.Application.Services;
 
-public class TabelaGeralService : ITabelaGeralService
+public class TabelaGeralService : BaseService<TabelaGeral>, ITabelaGeralService
 {
     private readonly ITabelaGeralRepository _repository;
 
-    public TabelaGeralService(ITabelaGeralRepository repository)
+    public TabelaGeralService(ITabelaGeralRepository repository) : base(repository)
     {
         _repository = repository;
     }
@@ -28,20 +28,15 @@ public class TabelaGeralService : ITabelaGeralService
         }
     }
 
-    public Task<List<TabelaGeral>> GetAllAsync()
-    {
-        return _repository.GetAllAsync();
-    }
-
     public async Task UpdateWinner(Time time, int pontos)
     {
         var tabelaGeral = await _repository.GetByIdOrDefaultAsync(time.Id);
         if (tabelaGeral == null)
             return;
 
-        tabelaGeral.vitorias++;
-        tabelaGeral.pontos += pontos;
-        tabelaGeral.jogos++;
+        tabelaGeral.Vitorias++;
+        tabelaGeral.Pontos += pontos;
+        tabelaGeral.Jogos++;
         _repository.Update(tabelaGeral);
     }
 
@@ -51,8 +46,8 @@ public class TabelaGeralService : ITabelaGeralService
         if (tabelaGeral == null)
             return;
 
-        tabelaGeral.derrotas++;
-        tabelaGeral.jogos++;
+        tabelaGeral.Derrotas++;
+        tabelaGeral.Jogos++;
         _repository.Update(tabelaGeral);
     }
 }

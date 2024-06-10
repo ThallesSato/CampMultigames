@@ -18,4 +18,13 @@ public class TabelaPorJogoTabelaRepository : Repository<TabelaPorJogoTabela>, IT
         return await _context.TabelasPorJogoTabela
             .FirstOrDefaultAsync(t => t.Time.Id == time.Id && t.JogoTabela.Id == jogo.Id);
     }
+
+    public new Task<List<TabelaPorJogoTabela>> GetAllAsync()
+    {
+        return _context.TabelasPorJogoTabela
+            .Include(t => t.Time)
+            .Include(t => t.JogoTabela)
+            .OrderByDescending(t => t.Pontos)
+            .ToListAsync();
+    }
 }
