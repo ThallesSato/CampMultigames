@@ -13,13 +13,16 @@ namespace CampMultigames.Api.Controllers;
 public class ConfrontoController : ControllerBase
 {
     private readonly IConfrontoService _confrontoService;
+    private readonly IBaseService<ConfrontoFfa> _confrontoFfaService;
     private readonly ITimeService _timeService;
     private readonly IJogoService _jogoService;
     private readonly ITabelaGeralService _tabelaGeralService;
     private readonly ITabelaPorJogoTabelaService _tabelaPorJogoTabelaService;
+    private readonly ITabelaPorJogoFfaService _tabelaPorJogoFfaService;
     private readonly IUnitOfWork _unitOfWork;
-    
-    public ConfrontoController(IConfrontoService confrontoService, ITimeService timeService, IJogoService jogoService, IUnitOfWork unitOfWork, ITabelaGeralService tabelaGeralService, ITabelaPorJogoTabelaService tabelaPorJogoTabelaService)
+    private readonly IPontosPorColocacaoService _pontosPorColocacaoService;
+
+    public ConfrontoController(IConfrontoService confrontoService, ITimeService timeService, IJogoService jogoService, IUnitOfWork unitOfWork, ITabelaGeralService tabelaGeralService, ITabelaPorJogoTabelaService tabelaPorJogoTabelaService, ITabelaPorJogoFfaService tabelaPorJogoFfaService, IPontosPorColocacaoService pontosPorColocacaoService, IBaseService<ConfrontoFfa> confrontoFfaService)
     {
         _confrontoService = confrontoService;
         _timeService = timeService;
@@ -27,6 +30,9 @@ public class ConfrontoController : ControllerBase
         _unitOfWork = unitOfWork;
         _tabelaGeralService = tabelaGeralService;
         _tabelaPorJogoTabelaService = tabelaPorJogoTabelaService;
+        _tabelaPorJogoFfaService = tabelaPorJogoFfaService;
+        _pontosPorColocacaoService = pontosPorColocacaoService;
+        _confrontoFfaService = confrontoFfaService;
     }
     
     [HttpGet]
@@ -42,6 +48,20 @@ public class ConfrontoController : ControllerBase
         }
     }
     
+    [HttpGet]
+    [Route("{confrontoId}")]
+    public async Task<ActionResult> GetById(int confrontoId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetByIdAsync(confrontoId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
     [HttpPost("GenerateAll")]
     //[Authorize]
     public async Task<IActionResult> GenerateAll()
@@ -49,14 +69,19 @@ public class ConfrontoController : ControllerBase
         try
         {
             var times = await _timeService.GetAllAsync();
-            var jogos = await _jogoService.GetAllTabelaAsync();
+            var jogoTabela = await _jogoService.GetAllTabelaAsync();
+            var jogoFfa = await _jogoService.GetAllFfaAsync();
             
             // Cria todos os confrontos
-            await _confrontoService.CreateAllAsync(times, jogos);
+            await _confrontoService.CreateAllAsync(times, jogoTabela);
             
             // Cria os times nas tabelas
             await _tabelaGeralService.CreateAllAsync(times);
-            await _tabelaPorJogoTabelaService.CreateAllAsync(times, jogos);
+            await _tabelaPorJogoTabelaService.CreateAllAsync(times, jogoTabela);
+            await _tabelaPorJogoFfaService.CreateAllAsync(times, jogoFfa);
+            
+            // Cria Pontuação dos times Ffa
+            await _pontosPorColocacaoService.CreateAllAsync(jogoFfa);
             
             // Salva e retorna
             await _unitOfWork.SaveChangesAsync();
@@ -78,23 +103,43 @@ public class ConfrontoController : ControllerBase
             var confronto = await _confrontoService.GetByIdAsync(confrontoId);
             if (confronto == null) 
                 return NotFound("Confronto not found");
-
+            
             // Cria os mapas
             var mapasDto = new List<MapaDto?>{ confrontoDto.Mapa1, confrontoDto.Mapa2, confrontoDto.Mapa3 };
+
+            // Contador para verificar mapas validos
+            var contar = 0;
+            
+            // Percorre os mapas enviados
+            foreach (var mapaDto in mapasDto)
+            {
+                
+                // Verifica se o mapa existe
+                if (mapaDto == null)
+                {
+                    // Aumenta o contador 
+                    contar++;
+                    if (contar == 2)
+                        return BadRequest("Mapa1 and Mapa2 are required");
+                    continue;
+                }
+                
+                // Verifica se o Id do time que pikou o mapa é presente no confronto
+                if (mapaDto.TimePickId != confronto.TimeCasaId && mapaDto.TimePickId != confronto.TimeForaId)
+                    return BadRequest("TimePickId is different from TimeCasaId and TimeForaId");
+                
+                // Mapeia o mapa
+                var result = mapaDto.Adapt<Mapa>();
+                result.Confronto = confronto;
+                
+                // Atribui o mapa ao confronto
+                confronto.Mapas.Add(result);
+            }
             
             // Atribui os dados
             confronto.PontosCasa = confrontoDto.PontosCasa;
             confronto.PontosFora = confrontoDto.PontosFora;
             confronto.Data = confrontoDto.Data;
-            confronto.Mapas = mapasDto
-                .Where(m => m != null)
-                .Select(m =>
-                {
-                    var result = m.Adapt<Mapa>();
-                    result.Confronto = confronto;
-                    return result;
-                })
-                .ToList();
             
             // Atualiza o confront
             _confrontoService.Update(confronto);
@@ -152,6 +197,21 @@ public class ConfrontoController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Route("time/futuros/{timeId}")]
+    public async Task<ActionResult> GetFuturosByTime(int timeId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetFuturosByTimeAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
     [HttpGet]
     [Route("time/passados/{timeId}")]
     public async Task<ActionResult> GetPassadosByTime(int timeId)
@@ -166,13 +226,25 @@ public class ConfrontoController : ControllerBase
         }
     }
     
-    [HttpGet]
-    [Route("time/futuros/{timeId}")]
-    public async Task<ActionResult> GetFuturosByTime(int timeId)
+    [HttpPost("ffa")]
+    public async Task<ActionResult> PostFfa(ConfrontoFfaDto confrontoDto)
     {
         try
         {
-            return Ok(await _confrontoService.GetFuturosByTimeAsync(timeId));
+            
+            // TODO fazendo
+            var jogoFfa = await _jogoService.GetFfaById(confrontoDto.JogoFfaId);
+
+            if (jogoFfa == null)
+                BadRequest("JogoFfa not found");
+            
+            var confronto = confrontoDto.Adapt<ConfrontoFfa>();
+
+            confronto.JogoFfa = jogoFfa;
+            
+            await _confrontoFfaService.PostAsync(confronto);
+            await _unitOfWork.SaveChangesAsync();
+            return Ok();
         }
         catch (Exception e)
         {

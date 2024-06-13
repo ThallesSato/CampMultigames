@@ -25,6 +25,9 @@ public static class Initializer
         services.AddScoped(typeof(ITabelaPorJogoTabelaRepository), typeof(TabelaPorJogoTabelaRepository));
         services.AddScoped(typeof(IJogosRepository), typeof(JogosRepository));
         services.AddScoped(typeof(IConfrontoRepository), typeof(ConfrontoRepository));
+        services.AddScoped(typeof(ITabelaPorJogoFfaRepository), typeof(TabelaPorJogoFfaRepository));
+        services.AddScoped(typeof(IPontosPorColocacaoRepository), typeof(PontosPorColocacaoRepository));
+        
         
         
         // services
@@ -34,6 +37,8 @@ public static class Initializer
         services.AddScoped(typeof(IConfrontoService), typeof(ConfrontoService));
         services.AddScoped(typeof(IJogoService), typeof(JogoService));
         services.AddScoped(typeof(ITimeService), typeof(TimeService));
+        services.AddScoped(typeof(ITabelaPorJogoFfaService), typeof(TabelaPorJogoFfaService));
+        services.AddScoped(typeof(IPontosPorColocacaoService), typeof(PontosPorColocacaoService));
         
     }
 }

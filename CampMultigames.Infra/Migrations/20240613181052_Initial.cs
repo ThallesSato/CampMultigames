@@ -18,6 +18,8 @@ namespace CampMultigames.Infra.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Foto = table.Column<string>(type: "TEXT", nullable: false),
+                    BgImage = table.Column<string>(type: "TEXT", nullable: false),
                     Discriminator = table.Column<string>(type: "TEXT", nullable: false),
                     pontosPorGame = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -32,11 +34,33 @@ namespace CampMultigames.Infra.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Foto = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Times", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PontosPorColocacao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    JogoFfaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Colocacao = table.Column<int>(type: "INTEGER", nullable: false),
+                    Ponto = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PontosPorColocacao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PontosPorColocacao_Jogos_JogoFfaId",
+                        column: x => x.JogoFfaId,
+                        principalTable: "Jogos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,6 +143,37 @@ namespace CampMultigames.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TabelasPorJogoFfa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    JogoFfaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Pontos = table.Column<int>(type: "INTEGER", nullable: false),
+                    P1 = table.Column<int>(type: "INTEGER", nullable: false),
+                    P2 = table.Column<int>(type: "INTEGER", nullable: false),
+                    P3 = table.Column<int>(type: "INTEGER", nullable: false),
+                    P4 = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TabelasPorJogoFfa", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TabelasPorJogoFfa_Jogos_JogoFfaId",
+                        column: x => x.JogoFfaId,
+                        principalTable: "Jogos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TabelasPorJogoFfa_Times_TimeId",
+                        column: x => x.TimeId,
+                        principalTable: "Times",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TabelasPorJogoTabela",
                 columns: table => new
                 {
@@ -155,6 +210,7 @@ namespace CampMultigames.Infra.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ConfrontoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TimePickId = table.Column<int>(type: "INTEGER", nullable: false),
                     PontosCasa = table.Column<int>(type: "INTEGER", nullable: false),
                     PontosFora = table.Column<int>(type: "INTEGER", nullable: false),
                     NomeMapa = table.Column<string>(type: "TEXT", nullable: false)
@@ -197,8 +253,23 @@ namespace CampMultigames.Infra.Migrations
                 column: "TimeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PontosPorColocacao_JogoFfaId",
+                table: "PontosPorColocacao",
+                column: "JogoFfaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TabelasGerais_TimeId",
                 table: "TabelasGerais",
+                column: "TimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TabelasPorJogoFfa_JogoFfaId",
+                table: "TabelasPorJogoFfa",
+                column: "JogoFfaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TabelasPorJogoFfa_TimeId",
+                table: "TabelasPorJogoFfa",
                 column: "TimeId");
 
             migrationBuilder.CreateIndex(
@@ -222,7 +293,13 @@ namespace CampMultigames.Infra.Migrations
                 name: "Players");
 
             migrationBuilder.DropTable(
+                name: "PontosPorColocacao");
+
+            migrationBuilder.DropTable(
                 name: "TabelasGerais");
+
+            migrationBuilder.DropTable(
+                name: "TabelasPorJogoFfa");
 
             migrationBuilder.DropTable(
                 name: "TabelasPorJogoTabela");

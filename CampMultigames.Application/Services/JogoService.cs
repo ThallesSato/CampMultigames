@@ -20,6 +20,16 @@ public class JogoService : BaseService<JogoBase>, IJogoService
         return result;
     }
 
+    public async Task<List<JogoFfa>> GetAllFfaAsync()
+    {
+        return await _repository.GetAllFfaAsync();
+    }
+
+    public async Task<JogoFfa?> GetFfaById(int id)
+    {
+        return await _repository.GetFfaById(id);
+    }
+
     public async Task<List<JogoTabela>> GetAllTabelaAsync()
     {
         return await _repository.GetAllTabelaAsync();

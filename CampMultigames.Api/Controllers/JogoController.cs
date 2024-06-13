@@ -18,12 +18,25 @@ public class JogoController : ControllerBase
         _unitOfWork = unitOfWork;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("tabela")]
+    public async Task<IActionResult> GetAllTabela()
     {
         try
         {
-            return Ok(await _jogoService.GetAllAsync());
+            return Ok(await _jogoService.GetAllTabelaAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet("ffa")]
+    public async Task<IActionResult> GetAllFfa()
+    {
+        try
+        {
+            return Ok(await _jogoService.GetAllFfaAsync());
         }
         catch (Exception e)
         {

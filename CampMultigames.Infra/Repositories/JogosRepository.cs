@@ -18,4 +18,18 @@ public class JogosRepository : Repository<JogoBase>, IJogosRepository
     {
         return await _context.JogosTabela.ToListAsync();
     }
+
+    public Task<List<JogoFfa>> GetAllFfaAsync()
+    {
+        return _context.JogosFfa
+            .Include(x => x.PontosPorColocacao)
+            .ToListAsync();
+    }
+
+    public Task<JogoFfa?> GetFfaById(int id)
+    {
+        return _context.JogosFfa
+            .Include(x => x.PontosPorColocacao)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
 }

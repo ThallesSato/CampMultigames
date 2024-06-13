@@ -34,6 +34,20 @@ public class TimeController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Route("{timeId}")]
+    public async Task<ActionResult> GetById(int timeId)
+    {
+        try
+        {
+            return Ok(await _timeService.GetByIdAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     [HttpPost]
     //[Authorize]
@@ -42,7 +56,7 @@ public class TimeController : ControllerBase
         try
         {
             // Transforma o Dto em Time
-            var time = timeDto.Adapt<Time>();
+            var time = new Time { Name = timeDto.Name };
             
             // Insere o time no banco
             var result = await _timeService.PostAsync(time);

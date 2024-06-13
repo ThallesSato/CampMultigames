@@ -4,8 +4,9 @@ namespace CampMultigames.Application.Interfaces;
 
 public interface IJogoService : IBaseService<JogoBase>
 {
-    Task<JogoBase> PostAsync(JogoBase jogoBase);
+    new Task<JogoBase> PostAsync(JogoBase jogoBase);
     Task<List<JogoTabela>> GetAllTabelaAsync();
-    Task<List<JogoBase>> GetAllAsync();
     Task<JogoTabela?> GetTabelaById(int id);
+    Task<List<JogoFfa>> GetAllFfaAsync();
+    Task<JogoFfa?> GetFfaById(int id);
 }

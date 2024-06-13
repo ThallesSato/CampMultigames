@@ -17,4 +17,11 @@ public class TimeRepository : Repository<Time>, ITimeRepository
     {
         return _context.Times.Include(x => x.Players).ToListAsync();
     }
+
+    public new Task<Time?> GetByIdOrDefaultAsync(int id)
+    {
+        return _context.Times
+            .Include(x => x.Players)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
 }

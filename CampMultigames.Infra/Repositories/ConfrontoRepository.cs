@@ -11,7 +11,9 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     {
         return _context.Confrontos
             .Include(c => c.TimeCasa)
+            .ThenInclude(t => t.Players)
             .Include(c => c.TimeFora)
+            .ThenInclude(t => t.Players)
             .Include(c => c.JogoTabela)
             .Include(c=> c.Mapas)
             .FirstOrDefaultAsync(c => c.Id == id);
@@ -41,18 +43,16 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
-            .Include(c=> c.Mapas)
             .ToListAsync();
     }
 
     public Task<List<Confronto>> GetPassadosAsync()
     {
         return _context.Confrontos
-            .Where(c => c.Data < DateTime.Now)
+            .Where(c => c.Data < DateTime.UtcNow)
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
-            .Include(c=> c.Mapas)
             .OrderByDescending(c => c.Data)
             .ToListAsync();
     }
@@ -60,11 +60,10 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public Task<List<Confronto>> GetPassadosByTimeAsync(int timeId)
     {
         return _context.Confrontos
-            .Where(c => c.Data < DateTime.Now && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
+            .Where(c => c.Data < DateTime.UtcNow && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
-            .Include(c=> c.Mapas)
             .OrderByDescending(c => c.Data)
             .ToListAsync();
     }
@@ -76,7 +75,6 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
-            .Include(c=> c.Mapas)
             .ToListAsync();
     }
 }
