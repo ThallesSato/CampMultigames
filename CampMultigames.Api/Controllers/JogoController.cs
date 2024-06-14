@@ -1,7 +1,8 @@
-﻿using CampMultigames.Application.Interfaces;
+﻿using CampMultigames.Application.Dtos.Input;
+using CampMultigames.Application.Interfaces;
 using CampMultigames.Domain.Interfaces;
 using CampMultigames.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampMultigames.Api.Controllers;
@@ -44,9 +45,29 @@ public class JogoController : ControllerBase
         }
     }
     
-    [HttpPost]
+    [HttpPost("ffa")]
     //[Authorize]
-    public async Task<IActionResult> Post(JogoBase jogoBase)
+    public async Task<IActionResult> Post(JogoFfaDto jogoBase)
+    {
+        try
+        {
+            // Cria o jogo
+            var jogo = jogoBase.Adapt<JogoFfa>();
+            var result = await _jogoService.PostAsync(jogo);
+
+            // Salva e retorna
+            await _unitOfWork.SaveChangesAsync();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPost("tabela")]
+    //[Authorize]
+    public async Task<IActionResult> Post(JogoTabela jogoBase)
     {
         try
         {

@@ -29,6 +29,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public new Task<List<Confronto>> GetAllAsync()
     {
         return _context.Confrontos
+            .AsNoTracking()
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
             .Include(c => c.JogoTabela)
@@ -39,6 +40,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public Task<List<Confronto>> GetFuturosAsync()
     {
         return _context.Confrontos
+            .AsNoTracking()
             .Where(c => c.Data == null)
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
@@ -49,6 +51,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public Task<List<Confronto>> GetPassadosAsync()
     {
         return _context.Confrontos
+            .AsNoTracking()
             .Where(c => c.Data < DateTime.UtcNow)
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
@@ -60,6 +63,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public Task<List<Confronto>> GetPassadosByTimeAsync(int timeId)
     {
         return _context.Confrontos
+            .AsNoTracking()
             .Where(c => c.Data < DateTime.UtcNow && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)
@@ -71,6 +75,7 @@ public class ConfrontoRepository : Repository<Confronto>, IConfrontoRepository
     public Task<List<Confronto>> GetFuturosByTimeAsync(int timeId)
     {
         return _context.Confrontos
+            .AsNoTracking()
             .Where(c => c.Data == null && (c.TimeCasaId == timeId || c.TimeForaId == timeId))
             .Include(c => c.TimeCasa)
             .Include(c => c.TimeFora)

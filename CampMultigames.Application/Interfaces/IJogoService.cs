@@ -6,7 +6,6 @@ public interface IJogoService : IBaseService<JogoBase>
 {
     new Task<JogoBase> PostAsync(JogoBase jogoBase);
     Task<List<JogoTabela>> GetAllTabelaAsync();
-    Task<JogoTabela?> GetTabelaById(int id);
     Task<List<JogoFfa>> GetAllFfaAsync();
     Task<JogoFfa?> GetFfaById(int id);
 }

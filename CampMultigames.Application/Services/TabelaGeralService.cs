@@ -7,10 +7,12 @@ namespace CampMultigames.Application.Services;
 public class TabelaGeralService : BaseService<TabelaGeral>, ITabelaGeralService
 {
     private readonly ITabelaGeralRepository _repository;
+    private readonly IPontosPorColocacaoRepository _pontosPorColocacaoRepository;
 
-    public TabelaGeralService(ITabelaGeralRepository repository) : base(repository)
+    public TabelaGeralService(ITabelaGeralRepository repository, IPontosPorColocacaoRepository pontosPorColocacaoRepository) : base(repository)
     {
         _repository = repository;
+        _pontosPorColocacaoRepository = pontosPorColocacaoRepository;
     }
 
     public async Task CreateAllAsync(List<Time> times)
@@ -49,5 +51,18 @@ public class TabelaGeralService : BaseService<TabelaGeral>, ITabelaGeralService
         tabelaGeral.Derrotas++;
         tabelaGeral.Jogos++;
         _repository.Update(tabelaGeral);
+    }
+    
+    public async Task UpdateFfa(Time time, int posicao, JogoFfa jogo)
+    {
+        var FfaGeral = await _repository.GetByIdOrDefaultAsync(time.Id);
+        if (FfaGeral == null)
+            return;
+        
+        var pontosPorColocacao = await _pontosPorColocacaoRepository.GetByJogoAndPosicaoAsync(jogo, posicao);
+
+        if (pontosPorColocacao != null)
+            FfaGeral.Pontos += pontosPorColocacao.Ponto;
+        _repository.Update(FfaGeral);
     }
 }

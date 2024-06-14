@@ -62,8 +62,63 @@ public class ConfrontoController : ControllerBase
         }
     }
     
+    [HttpGet]
+    [Route("/futuros")]
+    public async Task<ActionResult> GetFuturos()
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetFuturosAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("/passados")]
+    public async Task<ActionResult> GetPassados()
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetPassadosAsync());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("time/futuros/{timeId}")]
+    public async Task<ActionResult> GetFuturosByTime(int timeId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetFuturosByTimeAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("time/passados/{timeId}")]
+    public async Task<ActionResult> GetPassadosByTime(int timeId)
+    {
+        try
+        {
+            return Ok(await _confrontoService.GetPassadosByTimeAsync(timeId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
     [HttpPost("GenerateAll")]
-    //[Authorize]
     public async Task<IActionResult> GenerateAll()
     {
         try
@@ -93,8 +148,7 @@ public class ConfrontoController : ControllerBase
         }
     }
     
-    [HttpPut("{confrontoId}")]
-    //[Authorize]
+    [HttpPut("tabela/{confrontoId}")]
     public async Task<IActionResult> UpdateConfronto(int confrontoId, ConfrontoDto confrontoDto)
     {
         try
@@ -170,62 +224,6 @@ public class ConfrontoController : ControllerBase
         }
     }
     
-    [HttpGet]
-    [Route("/futuros")]
-    public async Task<ActionResult> GetFuturos()
-    {
-        try
-        {
-            return Ok(await _confrontoService.GetFuturosAsync());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet]
-    [Route("/passados")]
-    public async Task<ActionResult> GetPassados()
-    {
-        try
-        {
-            return Ok(await _confrontoService.GetPassadosAsync());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet]
-    [Route("time/futuros/{timeId}")]
-    public async Task<ActionResult> GetFuturosByTime(int timeId)
-    {
-        try
-        {
-            return Ok(await _confrontoService.GetFuturosByTimeAsync(timeId));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet]
-    [Route("time/passados/{timeId}")]
-    public async Task<ActionResult> GetPassadosByTime(int timeId)
-    {
-        try
-        {
-            return Ok(await _confrontoService.GetPassadosByTimeAsync(timeId));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
     [HttpPost("ffa")]
     public async Task<ActionResult> PostFfa(ConfrontoFfaDto confrontoDto)
     {
@@ -236,11 +234,26 @@ public class ConfrontoController : ControllerBase
             var jogoFfa = await _jogoService.GetFfaById(confrontoDto.JogoFfaId);
 
             if (jogoFfa == null)
-                BadRequest("JogoFfa not found");
+                return BadRequest("JogoFfa not found");
             
             var confronto = confrontoDto.Adapt<ConfrontoFfa>();
 
+            confronto.JogoFfaId = jogoFfa.Id;
             confronto.JogoFfa = jogoFfa;
+            
+            var listTimesIds = new List<int> {confronto.P1TimeId, confronto.P2TimeId, confronto.P3TimeId, confronto.P4TimeId};
+            var contador = 0;
+            foreach (var id in listTimesIds)
+            {
+                contador++;
+                var timeGet = await _timeService.GetByIdAsync(id);
+                if (timeGet == null)
+                    return BadRequest("Time not found" + id);
+
+                await _tabelaPorJogoFfaService.Update(timeGet, contador, jogoFfa);
+                await _tabelaGeralService.UpdateFfa(timeGet, contador, jogoFfa);
+
+            }
             
             await _confrontoFfaService.PostAsync(confronto);
             await _unitOfWork.SaveChangesAsync();

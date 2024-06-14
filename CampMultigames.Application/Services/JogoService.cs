@@ -37,10 +37,6 @@ public class JogoService : BaseService<JogoBase>, IJogoService
 
     public new async Task<JogoBase> PostAsync(JogoBase jogoBase)
     {
-        var tab = new JogoTabela()
-        {
-            Name = jogoBase.Name
-        };
-        return await _repository.CreateAsync(tab);
+        return await _repository.CreateAsync(jogoBase);
     }
 }

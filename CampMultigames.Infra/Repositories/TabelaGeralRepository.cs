@@ -16,6 +16,7 @@ public class TabelaGeralRepository : Repository<TabelaGeral> , ITabelaGeralRepos
     public new Task<List<TabelaGeral>> GetAllAsync()
     {
         return _context.TabelasGerais
+            .AsNoTracking()
             .Include(x => x.Time)
             .OrderByDescending(t => t.Pontos)
             .ToListAsync();

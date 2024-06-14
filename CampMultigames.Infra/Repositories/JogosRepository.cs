@@ -16,12 +16,15 @@ public class JogosRepository : Repository<JogoBase>, IJogosRepository
 
     public async Task<List<JogoTabela>> GetAllTabelaAsync()
     {
-        return await _context.JogosTabela.ToListAsync();
+        return await _context.JogosTabela
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public Task<List<JogoFfa>> GetAllFfaAsync()
     {
         return _context.JogosFfa
+            .AsNoTracking()
             .Include(x => x.PontosPorColocacao)
             .ToListAsync();
     }

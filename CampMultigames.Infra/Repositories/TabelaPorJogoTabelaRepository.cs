@@ -22,6 +22,7 @@ public class TabelaPorJogoTabelaRepository : Repository<TabelaPorJogoTabela>, IT
     public new Task<List<TabelaPorJogoTabela>> GetAllAsync()
     {
         return _context.TabelasPorJogoTabela
+            .AsNoTracking()
             .Include(t => t.Time)
             .Include(t => t.JogoTabela)
             .OrderByDescending(t => t.Pontos)

@@ -15,7 +15,10 @@ public class TimeRepository : Repository<Time>, ITimeRepository
 
     public new Task<List<Time>> GetAllAsync()
     {
-        return _context.Times.Include(x => x.Players).ToListAsync();
+        return _context.Times
+            .AsNoTracking()
+            .Include(x => x.Players)
+            .ToListAsync();
     }
 
     public new Task<Time?> GetByIdOrDefaultAsync(int id)

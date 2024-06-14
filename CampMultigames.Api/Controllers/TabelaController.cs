@@ -1,6 +1,5 @@
 ﻿using CampMultigames.Application.Dtos.Output;
 using CampMultigames.Application.Interfaces;
-using CampMultigames.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +12,11 @@ public class TabelaController : ControllerBase
     private readonly ITabelaGeralService _tabelaGeralService;
     private readonly ITabelaPorJogoTabelaService _tabelaPorJogoTabelaService;
     private readonly ITabelaPorJogoFfaService _tabelaPorJogoFfaService;
-    private readonly IJogoService _jogoService;
 
-    public TabelaController(ITabelaGeralService tabelaGeralService, ITabelaPorJogoTabelaService tabelaPorJogoTabelaService, IJogoService jogoService, ITabelaPorJogoFfaService tabelaPorJogoFfaService)
+    public TabelaController(ITabelaGeralService tabelaGeralService, ITabelaPorJogoTabelaService tabelaPorJogoTabelaService, ITabelaPorJogoFfaService tabelaPorJogoFfaService)
     {
         _tabelaGeralService = tabelaGeralService;
         _tabelaPorJogoTabelaService = tabelaPorJogoTabelaService;
-        _jogoService = jogoService;
         _tabelaPorJogoFfaService = tabelaPorJogoFfaService;
     }
 
@@ -29,25 +26,6 @@ public class TabelaController : ControllerBase
         try
         {
             return Ok(await _tabelaGeralService.GetAllAsync());
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
-    
-    [HttpGet("porjogo/{id}")]
-    public async Task<ActionResult> GetByJogo(int id)
-    {
-        try
-        {
-            // Verifica se o jogo existe
-            var jogo = await _jogoService.GetTabelaById(id);
-            if (jogo == null)
-                return NotFound("Jogo not found");
-            
-            // Retorna a tabela
-            return Ok(await _tabelaPorJogoTabelaService.GetAllByJogoAsync(jogo));
         }
         catch (Exception e)
         {
