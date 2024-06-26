@@ -12,4 +12,8 @@ public class ConfrontoDto
     [Required (ErrorMessage = "Mapa2 is required")]
     public required MapaDto? Mapa2 { get; set; }
     public MapaDto? Mapa3 { get; set; }
+    public MapaDto? Mapa4 { get; set; }
+    public MapaDto? Mapa5 { get; set; }
+    public MapaDto? Mapa6 { get; set; }
+    public MapaDto? Mapa7 { get; set; }
 }

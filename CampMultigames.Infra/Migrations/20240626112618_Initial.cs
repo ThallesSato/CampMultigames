@@ -20,7 +20,7 @@ namespace CampMultigames.Infra.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Foto = table.Column<string>(type: "TEXT", nullable: false),
                     BgImage = table.Column<string>(type: "TEXT", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
+                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     pontosPorGame = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -40,6 +40,30 @@ namespace CampMultigames.Infra.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Times", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfrontosFfa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    P1TimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    P2TimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    P3TimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    P4TimeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    JogoFfaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Data = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfrontosFfa", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfrontosFfa_Jogos_JogoFfaId",
+                        column: x => x.JogoFfaId,
+                        principalTable: "Jogos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -243,6 +267,11 @@ namespace CampMultigames.Infra.Migrations
                 column: "TimeForaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConfrontosFfa_JogoFfaId",
+                table: "ConfrontosFfa",
+                column: "JogoFfaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Mapas_ConfrontoId",
                 table: "Mapas",
                 column: "ConfrontoId");
@@ -286,6 +315,9 @@ namespace CampMultigames.Infra.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ConfrontosFfa");
+
             migrationBuilder.DropTable(
                 name: "Mapas");
 

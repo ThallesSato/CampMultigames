@@ -5,6 +5,7 @@ using CampMultigames.Domain.Models;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CampMultigames.Api.Controllers;
 

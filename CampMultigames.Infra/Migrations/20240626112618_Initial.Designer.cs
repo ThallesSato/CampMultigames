@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampMultigames.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240613181052_Initial")]
+    [Migration("20240626112618_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("CampMultigames.Domain.Models.Confronto", b =>
                 {
@@ -56,6 +56,37 @@ namespace CampMultigames.Infra.Migrations
                     b.ToTable("Confrontos");
                 });
 
+            modelBuilder.Entity("CampMultigames.Domain.Models.ConfrontoFfa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Data")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("JogoFfaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("P1TimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("P2TimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("P3TimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("P4TimeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JogoFfaId");
+
+                    b.ToTable("ConfrontosFfa");
+                });
+
             modelBuilder.Entity("CampMultigames.Domain.Models.JogoBase", b =>
                 {
                     b.Property<int>("Id")
@@ -68,6 +99,7 @@ namespace CampMultigames.Infra.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
+                        .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Foto")
@@ -320,6 +352,17 @@ namespace CampMultigames.Infra.Migrations
                     b.Navigation("TimeCasa");
 
                     b.Navigation("TimeFora");
+                });
+
+            modelBuilder.Entity("CampMultigames.Domain.Models.ConfrontoFfa", b =>
+                {
+                    b.HasOne("CampMultigames.Domain.Models.JogoFfa", "JogoFfa")
+                        .WithMany()
+                        .HasForeignKey("JogoFfaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JogoFfa");
                 });
 
             modelBuilder.Entity("CampMultigames.Domain.Models.Mapa", b =>

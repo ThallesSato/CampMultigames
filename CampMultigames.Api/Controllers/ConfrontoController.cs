@@ -159,7 +159,16 @@ public class ConfrontoController : ControllerBase
                 return NotFound("Confronto not found");
             
             // Cria os mapas
-            var mapasDto = new List<MapaDto?>{ confrontoDto.Mapa1, confrontoDto.Mapa2, confrontoDto.Mapa3 };
+            var mapasDto = new List<MapaDto?>
+            {
+                confrontoDto.Mapa1, 
+                confrontoDto.Mapa2, 
+                confrontoDto.Mapa3, 
+                confrontoDto.Mapa4, 
+                confrontoDto.Mapa5, 
+                confrontoDto.Mapa6, 
+                confrontoDto.Mapa7
+            };
 
             // Contador para verificar mapas validos
             var contar = 0;
@@ -173,8 +182,8 @@ public class ConfrontoController : ControllerBase
                 {
                     // Aumenta o contador 
                     contar++;
-                    if (contar == 2)
-                        return BadRequest("Mapa1 and Mapa2 are required");
+                    if ((contar == 2 && confronto.JogoTabelaId != 3)|| contar == 4)
+                        return BadRequest("More the half of Mapas are not informed");
                     continue;
                 }
                 
