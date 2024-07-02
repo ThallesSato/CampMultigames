@@ -187,8 +187,10 @@ public class ConfrontoController : ControllerBase
                     continue;
                 }
                 
-                // Verifica se o Id do time que pikou o mapa é presente no confronto
-                if (mapaDto.TimePickId != confronto.TimeCasaId && mapaDto.TimePickId != confronto.TimeForaId)
+                // Verifica se o Id do time que pikou o mapa é presente no confronto ou é nulo (rocket)
+                if (mapaDto.TimePickId == null || mapaDto.TimePickId == 0)
+                    mapaDto.TimePickId = 0;    
+                else if (mapaDto.TimePickId != confronto.TimeCasaId && mapaDto.TimePickId != confronto.TimeForaId)
                     return BadRequest("TimePickId is different from TimeCasaId and TimeForaId");
                 
                 // Mapeia o mapa
