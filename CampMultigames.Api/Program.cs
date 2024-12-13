@@ -41,7 +41,7 @@ using (var scope = app.Services.CreateScope())
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowAnyOrigin()
     .AllowCredentials()); // allow credentials
 
 app.Run();
